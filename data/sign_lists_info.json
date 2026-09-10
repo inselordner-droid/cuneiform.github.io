@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "description": "Kurzbeschreibungen der in den OSL-Zeichendatensätzen (Feld sign_lists) referenzierten paläographischen Zeichenlisten-Kataloge. Diese Kataloge sind wissenschaftliche Referenzwerke zur Zeichenform (Paläographie) — kein direktes Sprach-Tagging pro Zeichen. Recherchiert und mit Quellen belegt; Stand: Erstellung dieses Datensatzes.",
+    "sources": [
+      "https://github.com/oracc/osl (00lib/osl.asl)",
+      "https://www.unicode.org/L2/L2023/23071-cuneiform-sign-lists.pdf",
+      "https://en.wikipedia.org/wiki/List_of_cuneiform_signs"
+    ]
+  },
+  "lists": [
+    { "code": "SLLHA", "reference": "A. Deimel, Šumerisches Lexikon (ŠL) + R. Labat, Manuel d'épigraphie akkadienne (L) + F. Ellermeier/M. Studt, Handbuch Assur (HA)", "scope_de": "Sammelverzeichnis von Zeichenlesungen aus drei Standardwerken — deckt Sumerisch, Akkadisch und Hethitisch ab, epochenübergreifend." },
+    { "code": "LAK", "reference": "A. Deimel, Liste der archaischen Keilschriftzeichen (WVDOG 40, 1922)", "scope_de": "Zeichenliste der archaischen Texte aus Fara (Frühdynastisch IIIa, ca. 2600 v. Chr.) — frühe sumerische Zeichenformen." },
+    { "code": "MZL", "reference": "R. Borger, Mesopotamisches Zeichenlexikon (AOAT 305, 2003/2010)", "scope_de": "Der heute meistgenutzte Standard-Zeichenlexikon für sumerische und akkadische Keilschrift aller Epochen." },
+    { "code": "ABZL", "reference": "C. Mittermayer, Altbabylonische Zeichenliste der sumerisch-literarischen Texte (2006)", "scope_de": "Zeichenliste für altbabylonische Abschriften sumerischer literarischer Texte (ca. 2000–1600 v. Chr.)." },
+    { "code": "RSP", "reference": "Y. Rosengarten, Répertoire commenté des signes présargoniques sumériens de Lagash (1967)", "scope_de": "Zeichenrepertoire der vorsargonischen (frühdynastischen) Texte aus Lagaš, ca. 2500–2340 v. Chr." },
+    { "code": "KWU", "reference": "N. Schneider, Die Keilschriftzeichen der Wirtschaftsurkunden von Ur III (1935)", "scope_de": "Zeichenliste der Wirtschaftsurkunden der Ur-III-Zeit (neusumerisch, ca. 2100–2000 v. Chr.)." },
+    { "code": "ELLES", "reference": "P. Mander, Lista dei Segni dei testi lessicali di Ebla, in Pettinato, MEE 3 (1981)", "scope_de": "Zeichenliste der lexikalischen Texte aus Ebla (Syrien, ca. 2400–2350 v. Chr.) — trotz ähnlichem Namen NICHT elamisch." },
+    { "code": "BAU", "reference": "E. Burrows, Archaic Texts (UET 2, 1935)", "scope_de": "Zeichenliste der archaischen Texte aus Ur, Jemdet-Nasr-/Frühdynastisch-I-Zeit, ca. 3000–2900 v. Chr." },
+    { "code": "HZL", "reference": "C. Rüster & E. Neu, Hethitisches Zeichenlexikon (1989)", "scope_de": "Zeichenlexikon der hethitischen Keilschrift, Anatolien, ca. 1650–1180 v. Chr." },
+    { "code": "ASY", "reference": "W. von Soden & W. Röllig, Das akkadische Syllabar (AnOr 42, 4. Aufl. 1991)", "scope_de": "Akkadisches Silbenzeichen-Verzeichnis, epochenübergreifend." },
+    { "code": "PTACE", "reference": "A. Catagnoti, La paleografia dei testi dell'amministrazione e della cancelleria di Ebla (QdS 30, 2013)", "scope_de": "Paläographie der Verwaltungs- und Kanzleitexte aus Ebla, ca. 2400–2350 v. Chr." },
+    { "code": "GCSL", "reference": "nach I. M. Price, The Great Cylinder Inscriptions A & B of Gudea (1899)", "scope_de": "Zeichenliste der Gudea-Zylinder (neusumerisch, ca. 2125 v. Chr.), klassisches literarisches Sumerisch." },
+    { "code": "SYA", "reference": "F. Thureau-Dangin, Le Syllabaire Accadien (1926)", "scope_de": "Älteres akkadisches Silbenzeichen-Verzeichnis, epochenübergreifend — Gegenstück zu ASY." },
+    { "code": "REC", "reference": "F. Thureau-Dangin, Recherches sur l'origine de l'écriture cunéiforme (1898)", "scope_de": "Grundlegende frühe Studie zum Ursprung der Keilschrift, epochenübergreifend." },
+    { "code": "ZATU", "reference": "M. Green & H. J. Nissen, Zeichenliste der Archaischen Texte aus Uruk (ATU 2, 1987)", "scope_de": "Zeichenliste der ältesten protokeilschriftlichen Texte aus Uruk (Uruk IV–III, ca. 3350–3000 v. Chr.) — die früheste Schriftstufe." },
+    { "code": "U+", "reference": "Unicode-Codepoint-Referenz", "scope_de": "Kein eigenständiger wissenschaftlicher Katalog, sondern der Verweis auf den zugewiesenen Unicode-Codepoint des Zeichens." }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "_meta": {
+    "description": "Kuratierte Übersicht der wichtigsten mit Keilschrift geschriebenen Sprachen/Epochen, für die Sprachauswahl im Zeichenarchiv. sign_list_codes verknüpft jede Sprache/Epoche mit den dafür einschlägigen paläographischen Zeichenlisten-Katalogen aus dem OSL-Feld sign_lists (siehe data/sign_lists_info.json) — das ist eine sinnvolle Annäherung auf Basis anerkannter Referenzwerke, aber KEINE zeichenscharfe, geprüfte Sprachzuordnung pro Einzelzeichen: ein Zeichen kann in mehreren Sprachen/Epochen vorkommen, und die zugrunde liegenden Kataloge sind selbst nach Textkorpus, nicht nach Sprache, sortiert. coverage_de erklärt das für jede Sprache. Recherchiert mit Quellenangaben.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/Cuneiform",
+      "https://en.wikipedia.org/wiki/Sumerogram",
+      "https://en.wikipedia.org/wiki/Akkadian_language",
+      "https://en.wikipedia.org/wiki/Elamite_cuneiform"
+    ]
+  },
+  "languages": [
+    {
+      "id": "sumerian",
+      "group": "Sumerisch",
+      "name_de": "Sumerisch (allgemein)",
+      "date_range_de": "ca. 3400–2000 v. Chr. gesprochen; danach bis ca. 100 n. Chr. als Kult- und Gelehrtensprache in Gebrauch",
+      "script_type_de": "Logo-syllabisch: Wortzeichen (Logogramme) und Silbenzeichen gemeinsam",
+      "description_de": "Die Ursprungssprache der Keilschrift — kein bekannter Sprachverwandter (isolierte Sprache). Die Schrift entwickelt sich von piktographischen Zählmarken zu einer abstrakten Keilschrift.",
+      "sign_list_codes": ["LAK", "RSP", "BAU", "GCSL", "KWU", "ZATU", "REC", "SLLHA", "MZL"],
+      "coverage_de": "gut abgedeckt"
+    },
+    {
+      "id": "sumerian-archaic",
+      "group": "Sumerisch",
+      "name_de": "Sumerisch — archaisch (proto-/frühdynastisch)",
+      "date_range_de": "ca. 3350–2500 v. Chr.",
+      "script_type_de": "Piktographisch bis früh logo-syllabisch",
+      "description_de": "Früheste Schriftstufen: von den proto-keilschriftlichen Texten aus Uruk bis zu den frühdynastischen Texten aus Ur und Fara.",
+      "sign_list_codes": ["ZATU", "BAU", "LAK", "RSP"],
+      "coverage_de": "gut abgedeckt"
+    },
+    {
+      "id": "sumerian-neo",
+      "group": "Sumerisch",
+      "name_de": "Sumerisch — neusumerisch (Gudea- / Ur-III-Zeit)",
+      "date_range_de": "ca. 2150–2000 v. Chr.",
+      "script_type_de": "Logo-syllabisch, klassisches literarisches Sumerisch",
+      "description_de": "Blütezeit der sumerischen Literatur und Verwaltung (Gudea von Lagaš, 3. Dynastie von Ur).",
+      "sign_list_codes": ["GCSL", "KWU", "MZL"],
+      "coverage_de": "gut abgedeckt"
+    },
+    {
+      "id": "akkadian",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch (allgemein, alle Perioden)",
+      "date_range_de": "ca. 2350 v. Chr. – 100 n. Chr.",
+      "script_type_de": "Silbenschrift (CV-/VC-/CVC-Zeichen) plus eine feste Menge sumerischer Wortzeichen (\"Sumerogramme\") für häufige Begriffe",
+      "description_de": "Semitische Sprache, die die sumerische Schrift übernimmt und anpasst. Sumerogramme werden als Zeichen unverändert aus dem Sumerischen übernommen, aber als das jeweilige akkadische Wort ausgesprochen (nicht sumerisch gelesen).",
+      "sign_list_codes": ["ASY", "SYA", "MZL", "SLLHA"],
+      "coverage_de": "gut abgedeckt (allgemeines Silbenzeichen-Repertoire)"
+    },
+    {
+      "id": "akkadian-oldbab",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Altbabylonisch",
+      "date_range_de": "ca. 2000–1600 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme (Wortzeichen)",
+      "description_de": "Klassische/literarische Standardstufe des Akkadischen, Zeit Hammurabis. Grundlegend eine Silbenschrift, die Wörter lautlich buchstabiert — daneben aber ein festes, überschaubares Set an Sumerogrammen (Wortzeichen) für sehr häufige Begriffe wie Titel, Berufe, Götter, Zahlen/Maße und Alltagsdinge, z. B. LUGAL für šarrum (\"König\") oder DINGIR für ilum (\"Gott\"). Das Zeichen bleibt dabei sumerisch geschrieben, wird aber akkadisch gelesen.",
+      "sign_list_codes": ["ABZL", "ASY", "SYA", "MZL"],
+      "coverage_de": "teilweise abgedeckt (ABZL katalogisiert altbabylonische Abschriften sumerischer Texte; die allgemeinen Silbenzeichen-Verzeichnisse ASY/SYA/MZL ergänzen die akkadische Silbenschrift)"
+    },
+    {
+      "id": "akkadian-midbab",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Mittelbabylonisch",
+      "date_range_de": "ca. 1600–1000 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme",
+      "description_de": "Kassitenzeitliches Babylonisch.",
+      "sign_list_codes": ["ASY", "SYA", "MZL"],
+      "coverage_de": "nur allgemein abgedeckt (kein eigener periodenspezifischer Katalog im Datensatz)"
+    },
+    {
+      "id": "akkadian-neobab",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Neubabylonisch",
+      "date_range_de": "ca. 1000–539 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme",
+      "description_de": "Spätere, tendenziell kursivere Zeichenformen; Zeit der chaldäischen Dynastie.",
+      "sign_list_codes": ["ASY", "SYA", "MZL"],
+      "coverage_de": "nur allgemein abgedeckt (kein eigener periodenspezifischer Katalog im Datensatz)"
+    },
+    {
+      "id": "akkadian-oldassyrian",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Altassyrisch",
+      "date_range_de": "ca. 2000–1750 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme",
+      "description_de": "Dialekt der altassyrischen Handelskolonien (u. a. Kültepe/Kaneš).",
+      "sign_list_codes": ["ASY", "SYA", "MZL"],
+      "coverage_de": "nur allgemein abgedeckt (kein eigener periodenspezifischer Katalog im Datensatz)"
+    },
+    {
+      "id": "akkadian-midassyrian",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Mittelassyrisch",
+      "date_range_de": "ca. 1500–1000 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme",
+      "description_de": "Übergangsstufe des assyrischen Dialekts.",
+      "sign_list_codes": ["ASY", "SYA", "MZL"],
+      "coverage_de": "nur allgemein abgedeckt (kein eigener periodenspezifischer Katalog im Datensatz)"
+    },
+    {
+      "id": "akkadian-neoassyrian",
+      "group": "Akkadisch",
+      "name_de": "Akkadisch — Neuassyrisch",
+      "date_range_de": "ca. 1000–612 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme",
+      "description_de": "Reichszeitliches Assyrisch mit charakteristisch vereinfachten Zeichenformen.",
+      "sign_list_codes": ["ASY", "SYA", "MZL"],
+      "coverage_de": "nur allgemein abgedeckt (kein eigener periodenspezifischer Katalog im Datensatz)"
+    },
+    {
+      "id": "eblaite",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Eblaitisch",
+      "date_range_de": "ca. 2500–2300 v. Chr.",
+      "script_type_de": "Silbenschrift + starke Verwendung von Sumerogrammen",
+      "description_de": "Früh bezeugte semitische Sprache aus Ebla (Syrien), geschrieben in angepasster sumerisch-akkadischer Keilschrift.",
+      "sign_list_codes": ["ELLES", "PTACE"],
+      "coverage_de": "gut abgedeckt"
+    },
+    {
+      "id": "hittite",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Hethitisch",
+      "date_range_de": "ca. 1650–1180 v. Chr.",
+      "script_type_de": "Silbenschrift + Sumerogramme und Akkadogramme (auch akkadische Wörter werden logographisch geschrieben)",
+      "description_de": "Indoeuropäische Sprache Anatoliens; die Schrift wurde über altassyrische Händler aus Kaneš übernommen.",
+      "sign_list_codes": ["HZL"],
+      "coverage_de": "gut abgedeckt"
+    },
+    {
+      "id": "hurrian",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Hurritisch",
+      "date_range_de": "bezeugt ca. 2300–1000 v. Chr.",
+      "script_type_de": "überwiegend silbisch, vergleichsweise wenige Logogramme",
+      "description_de": "Isolierte Sprache Nordmesopotamiens/Syriens/Anatoliens (u. a. Mitanni).",
+      "sign_list_codes": [],
+      "coverage_de": "im vorliegenden Datensatz nicht durch einen eigenen Zeichenlisten-Katalog abgedeckt"
+    },
+    {
+      "id": "elamite",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Elamisch (Keilschrift)",
+      "date_range_de": "ca. 2500 v. Chr. – 4. Jh. v. Chr.",
+      "script_type_de": "überwiegend silbisch, reduziertes Zeicheninventar, mit einigen Logogrammen",
+      "description_de": "Isolierte Sprache im Südwesten Irans; verwendet eine vereinfachte, gestraffte Form der mesopotamischen Keilschrift.",
+      "sign_list_codes": [],
+      "coverage_de": "im vorliegenden Datensatz (sumerisch-akkadisch fokussierte OSL) nicht durch einen eigenen Zeichenlisten-Katalog abgedeckt"
+    },
+    {
+      "id": "urartian",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Urartäisch",
+      "date_range_de": "ca. 9.–6. Jh. v. Chr.",
+      "script_type_de": "silbisch, mit einem nennenswerten Anteil an Logogrammen",
+      "description_de": "Sprache des Reiches Urartu (Van-See-Region), Schrift von der neuassyrischen Keilschrift übernommen.",
+      "sign_list_codes": [],
+      "coverage_de": "im vorliegenden Datensatz nicht durch einen eigenen Zeichenlisten-Katalog abgedeckt"
+    },
+    {
+      "id": "old-persian",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Altpersisch",
+      "date_range_de": "ca. 525–330 v. Chr.",
+      "script_type_de": "kleines, weitgehend alphabetisch/halbsilbisches System: ca. 36 Lautzeichen + wenige (ca. 8) Wortzeichen",
+      "description_de": "Eigens für das Altpersische geschaffenes, vereinfachtes Keilschriftsystem — in der Zeichenform NICHT von der mesopotamischen Keilschrift abgeleitet; vor allem für Königsinschriften genutzt.",
+      "sign_list_codes": [],
+      "coverage_de": "eigenständiges Zeichensystem, im vorliegenden (mesopotamisch geprägten) Datensatz nicht abgedeckt"
+    },
+    {
+      "id": "ugaritic",
+      "group": "Weitere Keilschrift-Sprachen",
+      "name_de": "Ugaritisch",
+      "date_range_de": "ca. 1400–1190 v. Chr.",
+      "script_type_de": "kleines Alphabet (Abjad), ca. 30 Zeichen, meist ein Zeichen pro Konsonant",
+      "description_de": "Keilschriftliches, aber eigenständig erfundenes Alphabet aus Ugarit (Syrien) — trotz Keilform NICHT von den mesopotamischen Zeichenformen abgeleitet.",
+      "sign_list_codes": [],
+      "coverage_de": "eigenständiges Zeichensystem, im vorliegenden (mesopotamisch geprägten) Datensatz nicht abgedeckt"
+    }
+  ]
+}

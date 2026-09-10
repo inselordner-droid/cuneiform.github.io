@@ -1,0 +1,34 @@
+{
+  "version": "0.4.1",
+  "osl_source": "https://raw.githubusercontent.com/oracc/osl/master/00lib/osl.asl",
+  "record_fields": {
+    "id": "OSL object id (@oid), or a synthetic \"co:<name>\" id for compound-only entries that have no OID in the OSL",
+    "name": "OSL sign/form/compound name",
+    "record_type": "sign | form | compound_only",
+    "glyph": "Unicode glyph when present (@ucun)",
+    "unicode_name": "Unicode character name (@uname)",
+    "unicode_sequence": "OSL encoded multi-codepoint sequence when no single glyph exists (@useq)",
+    "unicode_age": "Unicode version the glyph was added in (@uage)",
+    "unicode_pua": "Private Use Area codepoint for signs not yet in the official Unicode cuneiform block (@upua)",
+    "readings": "current possible values (@v)",
+    "readings_historical": "historical / withdrawn values, kept for provenance (@v-)",
+    "sign_lists": "references to historical sign lists, e.g. LAK, MZL, ABZL (@list)",
+    "aka": "alternate identities (@aka)",
+    "provisional_names": "alternate / provisional sign names (@pname)",
+    "links": "external references, e.g. Wikidata, eBL (@link)",
+    "notes": "editorial notes (@note, @inote)",
+    "literature": "bibliographic references (@lit)",
+    "deprecated": "true if the OSL marks this entry as withdrawn/superseded (@sign- / @form-)",
+    "placeholder_glyph_flag": "true if the glyph is a technical placeholder rather than a properly encoded character (@fake)",
+    "extra_fields": "any other recognised OSL tag not mapped to a dedicated field above, kept verbatim so nothing is silently discarded",
+    "note_no_independent_entry": "present only on compound_only records: explains that this is an attested compound name without its own sign entry/OID",
+    "source_ids": "provenance"
+  },
+  "changelog": {
+    "0.4.1": [
+      "Fixed: @sign-/@form- (deprecated entries) were merged into the preceding record and overwrote its @oid. They are now parsed as their own, correctly attributed records.",
+      "Added fields: readings_historical, unicode_pua, provisional_names, placeholder_glyph_flag, extra_fields.",
+      "Added optional import of @compoundonly entries as record_type compound_only with a synthetic id."
+    ]
+  }
+}

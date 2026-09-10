@@ -1,0 +1,132 @@
+[
+  {
+    "id": "o0000087",
+    "name": "A",
+    "record_type": "sign",
+    "glyph": "𒀀",
+    "unicode_name": "CUNEIFORM SIGN A",
+    "unicode_sequence": null,
+    "unicode_age": "5.0",
+    "unicode_pua": null,
+    "readings": [
+      "ʾu₄",
+      "a",
+      "aia₂",
+      "aya₂",
+      "barₓ",
+      "buniŋₓ",
+      "burₓ",
+      "dur₅",
+      "duru₅",
+      "e₄",
+      "ea",
+      "ebir₃",
+      "emₓ",
+      "epir₃",
+      "eš₁₀",
+      "ŋa₁₀",
+      "ia₁₀",
+      "id₅?",
+      "me₅",
+      "mu₁₄",
+      "sedₓ",
+      "šegₓ",
+      "ṭur₅",
+      "ya₁₀"
+    ],
+    "readings_historical": [],
+    "sign_lists": [
+      "LAK795",
+      "ASY311",
+      "ABZL470",
+      "BAU416",
+      "ELLES393",
+      "GCSL324",
+      "KWU901",
+      "MZL839",
+      "PTACE328",
+      "RSP051",
+      "SYA274",
+      "U+12000"
+    ],
+    "aka": [],
+    "provisional_names": [],
+    "links": [
+      "eBL A https://www.ebl.lmu.de/signs/A",
+      "Wikidata Q87554995 http://www.wikidata.org/entity/Q87554995"
+    ],
+    "notes": [],
+    "literature": [],
+    "deprecated": false,
+    "placeholder_glyph_flag": false,
+    "extra_fields": {},
+    "source_ids": [
+      "ORACC-OSL"
+    ]
+  },
+  {
+    "id": "o0000655",
+    "name": "|A.AN|",
+    "record_type": "sign",
+    "glyph": "𒀀𒀭",
+    "unicode_name": null,
+    "unicode_sequence": "x12000.x1202D",
+    "unicode_age": null,
+    "unicode_pua": null,
+    "readings": [
+      "a₄",
+      "am₃",
+      "emₓ",
+      "še₇",
+      "šeg₃",
+      "šeŋ₃",
+      "šemₓ"
+    ],
+    "readings_historical": [],
+    "sign_lists": [
+      "ASY312",
+      "KWU902",
+      "RSP053",
+      "SYA275"
+    ],
+    "aka": [],
+    "provisional_names": [],
+    "links": [
+      "eBL |A.AN| https://www.ebl.lmu.de/signs/|A.AN|"
+    ],
+    "notes": [],
+    "literature": [],
+    "deprecated": false,
+    "placeholder_glyph_flag": false,
+    "extra_fields": {},
+    "source_ids": [
+      "ORACC-OSL"
+    ]
+  },
+  {
+    "id": "o0000668",
+    "name": "|A.GAN₂@t|",
+    "record_type": "sign",
+    "glyph": null,
+    "unicode_name": null,
+    "unicode_sequence": null,
+    "unicode_age": null,
+    "unicode_pua": null,
+    "readings": [],
+    "readings_historical": [],
+    "sign_lists": [],
+    "aka": [],
+    "provisional_names": [],
+    "links": [],
+    "notes": [
+      "LAK800 is |A×GAN₂@g|, which is spurious, too"
+    ],
+    "literature": [],
+    "deprecated": true,
+    "placeholder_glyph_flag": false,
+    "extra_fields": {},
+    "source_ids": [
+      "ORACC-OSL"
+    ]
+  }
+]

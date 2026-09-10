@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuneiform Explorer — Begriffs-Wörterbuch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Vollkorn:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Sans+Cuneiform&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#ecdcae; --parchment-2:#e3cf9a; --parchment-deep:#d3b87e;
+  --panel:#f7ecd2; --panel-2:#f2e3bd;
+  --ink:#2c1c0e; --ink-soft:#4a3520; --muted:#7d6847;
+  --leather:#3a2415; --leather-2:#211307;
+  --brass:#a8813a; --brass-light:#d9b564; --brass-dark:#7e5b22;
+  --seal:#7c2c1f; --seal-dark:#5c1f16;
+  --line:#c7a668;
+  --tag:#e9d6a3; --tag-ink:#5a4322;
+  --warn-bg:#f0d9a4; --warn-ink:#6e4610;
+  --ok-bg:#e0e7c3; --ok-ink:#3d5522;
+  --err-bg:#f0dcd2; --err-ink:#6e2a1a; --err-line:#c68f77;
+}
+*{box-sizing:border-box}
+body{
+  font-family:'Vollkorn',Georgia,serif;margin:0;color:var(--ink);font-size:16px;
+  background-image:
+    radial-gradient(ellipse at 20% -10%, rgba(255,248,222,.55), transparent 55%),
+    radial-gradient(ellipse at 100% 110%, rgba(58,36,21,.22), transparent 60%),
+    linear-gradient(160deg, var(--parchment), var(--parchment-2) 55%, var(--parchment-deep));
+}
+a{color:inherit}
+h1,h2,h3,h4,.brand h1,button.primary,.langchip,summary,.stamp{font-family:'Cinzel',serif}
+
+header{background:linear-gradient(160deg, var(--leather), var(--leather-2) 85%);color:var(--brass-light);border-bottom:4px solid var(--brass-dark);box-shadow:0 4px 16px rgba(0,0,0,.35)}
+.headertop{display:flex;align-items:center;gap:14px;padding:16px 22px;flex-wrap:wrap;max-width:820px;margin:auto}
+.brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+.brand .compass{font-size:1.3rem;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.brand .glyph{font-size:1.4rem;font-family:'Noto Sans Cuneiform',system-ui,sans-serif;color:var(--brass-light)}
+.brand h1{margin:0;font-size:1.25rem;font-weight:600;letter-spacing:.04em;color:var(--brass-light);text-shadow:0 1px 0 rgba(0,0,0,.6), 0 0 16px rgba(216,181,99,.2)}
+.keychip{font-size:.75rem;padding:6px 13px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--brass-dark);color:var(--parchment-2);white-space:nowrap;letter-spacing:.02em}
+.keychip.on{background:rgba(107,148,66,.22);border-color:#6f9346;color:#d7edc0}
+.iconbtn{background:rgba(255,255,255,.04);border:1px solid var(--brass-dark);color:var(--brass-light);border-radius:7px;padding:11px 17px;font-size:.92rem;cursor:pointer;font-family:'Vollkorn',serif;min-height:44px}
+.iconbtn:hover{border-color:var(--brass-light);background:rgba(216,181,99,.12)}
+.backlink{font-size:.88rem;color:var(--parchment-2);text-decoration:none;border:1px solid var(--brass-dark);border-radius:8px;padding:10px 16px;white-space:nowrap;background:rgba(216,181,99,.08);min-height:44px;display:inline-flex;align-items:center}
+.backlink:hover{color:var(--brass-light);border-color:var(--brass-light);background:rgba(216,181,99,.15)}
+
+/* ---------- Entdecker-Fortschritt (Gamification) ---------- */
+.progchip{cursor:pointer;font-size:.82rem;padding:9px 15px;border-radius:20px;background:linear-gradient(180deg, rgba(216,181,99,.22), rgba(216,181,99,.07));border:1px solid var(--brass-dark);color:var(--brass-light);white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;gap:4px}
+.progchip:hover{border-color:var(--brass-light)}
+.progchip.levelup{animation:levelup-pulse 1.1s ease}
+@keyframes levelup-pulse{0%{box-shadow:0 0 0 0 rgba(216,181,99,.65)}70%{box-shadow:0 0 0 16px rgba(216,181,99,0)}100%{box-shadow:0 0 0 0 rgba(216,181,99,0)}}
+.toast-host{position:fixed;top:16px;right:16px;z-index:60;display:flex;flex-direction:column;gap:10px;pointer-events:none;max-width:90vw}
+.toast{background:linear-gradient(160deg, var(--leather), var(--leather-2));color:var(--brass-light);border:1px solid var(--brass-dark);border-radius:10px;padding:13px 17px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:flex;gap:11px;align-items:center;font-size:.85rem;font-family:'Vollkorn',serif;transform:translateX(120%);opacity:0;transition:transform .35s ease, opacity .35s ease;max-width:300px}
+.toast.show{transform:translateX(0);opacity:1}
+.toast .ticon{font-size:1.5rem}
+.toast b{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.02em;text-transform:uppercase;color:var(--parchment-2)}
+.proglist{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.milestone{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.35);border:1px solid var(--line);opacity:.55}
+.milestone.done{opacity:1;background:rgba(216,181,99,.14);border-color:var(--brass-dark)}
+.milestone .micon{font-size:1.3rem;line-height:1}
+.milestone .small{color:var(--muted);font-size:.8rem;margin-top:2px}
+.progressbar{height:8px;border-radius:4px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:10px}
+.progressbar > div{height:100%;background:linear-gradient(90deg, var(--brass-dark), var(--brass-light))}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;animation:fadeInUp .35s ease forwards}
+
+#settingsPanel{background:linear-gradient(180deg,#2b1b10,#1a1008);color:#e9dfc9;border-bottom:1px solid var(--brass-dark)}
+#settingsPanel .inner{max-width:820px;margin:auto;padding:20px 22px}
+.apikeybar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.9rem}
+.apikeybar label{color:#c9bda0;font-family:'Vollkorn',serif}
+.apikeybar input[type=password]{width:260px}
+.apikeybar input,.apikeybar select{background:#fdf6e3;font-family:'Vollkorn',serif}
+.note-dark{font-size:.83rem;color:#b6ab90;margin:14px 0 0;line-height:1.65;font-family:'Vollkorn',serif}
+.note-dark code{background:#140c06;padding:1px 5px;border-radius:4px}
+.note-dark a{color:var(--brass-light)}
+#testResult{font-size:.85rem;margin-left:6px;font-family:'Vollkorn',serif}
+#testResult.ok{color:#bfe6c2}
+#testResult.fail{color:#f3b6b6}
+
+main{max-width:820px;margin:auto;padding:38px 22px 60px;position:relative}
+h1.title{font-size:1.95rem;margin:0 0 8px;text-align:center;letter-spacing:.03em;color:var(--ink);text-shadow:0 1px 0 rgba(255,255,255,.4)}
+h1.title .sub-compass{font-size:1.35rem;vertical-align:-2px;margin-right:6px;filter:sepia(.2)}
+p.lede{color:var(--muted);text-align:center;margin:0 0 32px;font-size:1.05rem;font-style:italic}
+
+section.card{background:var(--panel);border:1px solid var(--brass-dark);border-radius:9px;padding:34px 30px 36px;box-shadow:0 2px 0 rgba(255,255,255,.35) inset, 0 12px 28px rgba(43,25,10,.16);margin-bottom:26px;position:relative}
+section.card::after{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 22px 22px 0;border-color:transparent var(--parchment-deep) transparent transparent;filter:drop-shadow(-1px 1px 2px rgba(0,0,0,.22));border-top-right-radius:9px}
+section.card.focus{border-color:var(--seal);box-shadow:0 2px 0 rgba(255,255,255,.35) inset, 0 18px 38px rgba(124,44,31,.2)}
+
+button{cursor:pointer;font:inherit;font-family:'Vollkorn',serif;border-radius:8px;border:1px solid var(--brass-dark);background:var(--panel-2);padding:13px 20px;color:var(--ink);min-height:46px;font-size:.95rem}
+button:hover{border-color:var(--seal)}
+button.primary{
+  background:linear-gradient(180deg, var(--brass-light), var(--brass) 60%, var(--brass-dark));
+  border:2px solid var(--brass-dark);color:var(--leather-2);font-size:1.05rem;letter-spacing:.04em;
+  text-transform:uppercase;padding:16px 26px;min-height:56px;font-weight:700;border-radius:10px;
+  box-shadow:0 4px 0 var(--brass-dark), 0 12px 26px rgba(43,25,10,.32);
+}
+button.primary:hover{filter:brightness(1.05);border-color:var(--seal);transform:translateY(-1px)}
+button.primary:active{transform:translateY(1px);box-shadow:0 1px 0 var(--brass-dark),0 4px 10px rgba(43,25,10,.25)}
+button.primary:disabled{opacity:.42;filter:grayscale(.35);box-shadow:none;transform:none;cursor:not-allowed}
+button.small{padding:11px 18px;font-size:.88rem;border-radius:7px;min-height:42px}
+button.ghost{border-color:transparent;background:transparent;color:var(--brass-dark)}
+button.ghost:hover{background:rgba(168,129,58,.13);border-color:transparent}
+input[type=password],input[type=text],select,textarea{padding:12px 14px;border-radius:7px;border:1px solid var(--brass-dark);font:inherit;font-family:'Vollkorn',serif;background:#fdf8ea;min-height:46px;font-size:.98rem}
+
+.searchbar{display:flex;gap:12px;flex-wrap:wrap}
+.searchbar input[type=text]{flex:1;min-width:220px}
+
+#error{margin-top:0}
+#error .box{background:var(--err-bg);border:1px solid var(--err-line);color:var(--err-ink);border-radius:8px;padding:15px 18px;font-size:.92rem;display:flex;gap:10px;align-items:flex-start;margin-bottom:24px;font-family:'Vollkorn',serif}
+#error .box .x{margin-left:auto;background:none;border:none;color:var(--err-ink);cursor:pointer;font-size:1.1rem;line-height:1}
+
+.spinner{display:inline-block;animation:spin 1.3s linear infinite;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loadingnote{text-align:center;color:var(--muted);font-size:.9rem;margin-top:14px;font-style:italic}
+
+/* ---------- Ergebnisse: Kurzglossar ---------- */
+#curatedSection,#aiSection{display:none}
+.sectiontitle{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-family:'Cinzel',serif;margin:0 0 14px}
+.dictgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:6px}
+.dictcard{background:var(--panel-2);border:1px solid var(--brass-dark);border-radius:8px;padding:16px;cursor:pointer;transition:transform .12s,box-shadow .12s;text-align:left;font-family:'Vollkorn',serif}
+.dictcard:hover{border-color:var(--seal);transform:translateY(-2px);box-shadow:0 6px 14px rgba(43,25,10,.2)}
+.dictcard .g{font-size:2.1rem;font-family:'Noto Sans Cuneiform',system-ui,sans-serif;line-height:1}
+.dictcard .g.nomatch{font-size:1.1rem;color:var(--muted)}
+.dictcard h3{margin:8px 0 2px;font-size:1.02rem;font-family:'Cinzel',serif;color:var(--ink-soft)}
+.dictcard .rd{font-size:.84rem;color:var(--muted);font-style:italic}
+.dictcard .meaning{font-size:.92rem;margin-top:6px}
+.dictcard .cat{display:inline-block;margin-top:8px;padding:2px 9px;background:var(--tag);color:var(--tag-ink);border:1px solid var(--brass-dark);border-radius:3px;font-size:.7rem}
+.emptynote{color:var(--muted);font-size:.9rem;font-style:italic}
+
+.ai-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;background:rgba(255,255,255,.3);border:1px dashed var(--brass-dark);border-radius:8px;padding:16px 18px;margin-top:8px}
+.ai-cta p{margin:0;font-size:.88rem;color:var(--ink-soft);max-width:480px}
+
+.ai-disclaimer{background:var(--warn-bg);color:var(--warn-ink);border:1px dashed var(--warn-ink);border-radius:7px;padding:12px 16px;font-size:.86rem;margin:18px 0;font-style:italic}
+.langresults{display:flex;flex-direction:column;gap:10px}
+.langresult{background:rgba(255,255,255,.4);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.langresult .lhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.langresult .lname{font-family:'Cinzel',serif;font-size:.92rem;color:var(--ink-soft);letter-spacing:.02em}
+.availbadge{font-size:.68rem;padding:2px 9px;border-radius:10px;letter-spacing:.03em;text-transform:uppercase;border:1px solid}
+.availbadge.yes{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-ink)}
+.availbadge.no{background:var(--err-bg);color:var(--err-ink);border-color:var(--err-line)}
+.langresult .word{font-size:1.1rem;margin-top:8px}
+.langresult .signrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.minichip{display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:6px;background:var(--panel-2);border:1px dashed var(--warn-ink);font-size:.85rem;cursor:pointer}
+.minichip .g{font-size:1.3rem;font-family:'Noto Sans Cuneiform',system-ui,sans-serif}
+.langresult .conf{font-size:.78rem;color:var(--muted);margin-top:8px}
+.langresult .notes{font-size:.85rem;color:var(--ink-soft);margin-top:6px;font-style:italic}
+
+/* ---------- Detail-Overlay ---------- */
+#overlay{position:fixed;inset:0;background:rgba(20,12,4,.6);display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto;z-index:30}
+#overlay.open{display:flex}
+#panel{background:var(--panel);max-width:460px;width:100%;border:2px solid var(--brass-dark);border-radius:9px;padding:26px 28px 30px;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+#panel::after{content:"";position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 18px 18px 0;border-color:transparent var(--parchment-deep) transparent transparent;border-top-right-radius:9px}
+#panel .close{position:absolute;top:12px;right:14px;background:rgba(124,44,31,.08);border:1px solid var(--brass-dark);border-radius:50%;width:38px;height:38px;font-size:1.15rem;cursor:pointer;color:var(--ink-soft);display:flex;align-items:center;justify-content:center}
+#panel .close:hover{background:rgba(124,44,31,.16);border-color:var(--seal)}
+#panel .pg{font-size:3rem;font-family:'Noto Sans Cuneiform',system-ui,sans-serif}
+#panel h3{margin:6px 0 2px;font-size:1.2rem;letter-spacing:.02em}
+#panel .pid{color:var(--muted);font-size:.8rem;margin-bottom:12px;font-style:italic}
+#panel .plist{font-size:.89rem;line-height:1.7}
+#panel .plist b{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-soft)}
+#panel .tag{display:inline-block;padding:3px 10px;background:var(--tag);color:var(--tag-ink);border:1px solid var(--brass-dark);border-radius:4px;margin:2px 3px 0 0;font-size:.78rem}
+
+footer{max-width:820px;margin:0 auto 40px;padding:0 22px;color:var(--muted);font-size:.82rem;line-height:1.7;text-align:center;font-style:italic}
+</style>
+</head>
+<body>
+<header>
+  <div class="headertop">
+    <div class="brand">
+      <span class="compass">🧭</span>
+      <span class="glyph">𒀭</span>
+      <h1>Cuneiform Explorer</h1>
+    </div>
+    <span class="progchip" id="progChip" title="Fortschritt anzeigen"></span>
+    <span class="keychip" id="keyChip">Kein API-Key</span>
+    <button class="iconbtn" id="settingsToggle" aria-expanded="false">⚙ API-Key</button>
+    <a class="backlink" href="index.html">🏺 Tafel-Übersetzung →</a>
+    <a class="backlink" href="archiv.html">🗿 Zeichen-Archiv →</a>
+  </div>
+</header>
+
+<div id="settingsPanel" hidden>
+  <div class="inner">
+    <div class="apikeybar">
+      <label for="apiKey">OpenRouter API-Key</label>
+      <input type="password" id="apiKey" placeholder="sk-or-v1-...">
+      <label for="model">Modell (optional)</label>
+      <input type="text" id="model" placeholder="automatisch (empfohlen)" style="width:250px">
+      <button id="saveKey" class="small">Speichern</button>
+      <button id="clearKey" class="small ghost" style="color:#e9dfc9">Entfernen</button>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="testConn" class="small">Verbindung testen</button>
+      <span id="testResult"></span>
+    </div>
+    <p class="note-dark">
+      Der API-Key wird nur für die optionalen KI-Vorschläge zu weiteren Keilschriftsprachen benötigt — die
+      Kurzglossar-Treffer (Sumerisch/Akkadisch) funktionieren auch ohne Key. Kostenlosen Key holen: auf
+      <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> registrieren (kein Zahlungsmittel
+      nötig). Der Key bleibt nur lokal in diesem Browser (<code>localStorage</code>, gemeinsam mit den anderen
+      Seiten dieser App) und geht direkt an <code>openrouter.ai</code> — kein Server dazwischen.
+    </p>
+  </div>
+</div>
+
+<main>
+<h1 class="title"><span class="sub-compass">🔤</span>Begriffs-Wörterbuch</h1>
+<p class="lede">Deutschen Begriff eingeben — passende Keilschriftzeichen und Übersetzungen in mehreren Keilschriftsprachen finden.</p>
+
+<div id="error" hidden><div class="box"><span id="errorText"></span><button class="x" id="errorClose">✕</button></div></div>
+
+<section class="card focus">
+  <div class="searchbar">
+    <input type="text" id="termInput" placeholder="z. B. König, Haus, Sonne, Tempel …">
+    <button class="primary" id="searchBtn">🔍 Begriff suchen</button>
+  </div>
+</section>
+
+<section class="card" id="curatedSection">
+  <p class="sectiontitle">Kurzglossar-Treffer (kuratiert, Sumerisch/Akkadisch)</p>
+  <div id="curatedGrid" class="dictgrid"></div>
+  <div id="curatedEmpty" class="emptynote" style="display:none">Kein Treffer im kuratierten Kurzglossar (ca. 140 häufige Begriffe) für diesen Begriff.</div>
+</section>
+
+<section class="card" id="aiSection">
+  <p class="sectiontitle">Weitere Keilschriftsprachen (KI-Vorschlag)</p>
+  <div class="ai-cta" id="aiCta">
+    <p>Das Kurzglossar deckt nur Sumerisch/Akkadisch ab. Für weitere Keilschriftsprachen (Hethitisch, Elamisch,
+      Altpersisch, Ugaritisch, Eblaitisch, Hurritisch, Urartäisch) kann optional eine KI-Einschätzung angefragt
+      werden — unverifiziert, siehe Hinweis unten.</p>
+    <button class="small" id="aiRequestBtn">🔮 KI-Vorschlag anfragen</button>
+  </div>
+  <div class="loadingnote" id="aiLoadingNote" style="display:none"></div>
+  <div id="aiResultsBox" style="display:none">
+    <div class="ai-disclaimer">⚠ KI-Vorschlag, unverifiziert: Diese Übersetzungen/Zeichen wurden von einer KI auf
+      Basis von Wahrscheinlichkeit erzeugt, nicht aus einer geprüften Quelle entnommen. Sie können falsch oder für
+      manche Sprachen gar nicht sinnvoll übertragbar sein — insbesondere Eigennamen, moderne Begriffe oder
+      kulturspezifische Konzepte haben oft kein direktes antikes Äquivalent. Zur Verifikation bitte Fachliteratur
+      konsultieren.</div>
+    <div id="aiResults" class="langresults"></div>
+  </div>
+</section>
+
+</main>
+<footer>
+Kurzglossar-Treffer stammen aus einem separat kuratierten, recherchierten Datensatz (ca. 140 häufige Begriffe,
+siehe Projekt-README) — nicht aus der Oracc Sign List selbst, die keine Bedeutungen enthält. KI-Vorschläge für
+weitere Sprachen sind unverifizierte Hypothesen und ersetzen keine fachliche Prüfung.
+</footer>
+
+<div id="overlay"><div id="panel"></div></div>
+
+<script src="gamify.js"></script>
+<script>
+/* ---------- State ---------- */
+let osl = [];
+let oslByName = new Map();
+let glossary = [];
+let languages = [];
+let aiLanguageTargets = []; // [{id, label}]
+const $ = sel => document.querySelector(sel);
+
+function escapeHtml(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+function showError(msg){
+  $("#errorText").textContent = msg || "";
+  $("#error").hidden = !msg;
+  if(msg) $("#error").scrollIntoView({behavior:"smooth", block:"center"});
+}
+$("#errorClose").onclick = () => showError("");
+
+/* ---------- Fortschritt / Gamification ---------- */
+$("#progChip").onclick = () => CuneiformProgress.openProgressPanel();
+CuneiformProgress.onChange(() => CuneiformProgress.renderProgressChip());
+
+/* ---------- Settings (API-Key, gemeinsam mit index.html) ---------- */
+$("#settingsToggle").onclick = () => {
+  const panel = $("#settingsPanel");
+  panel.hidden = !panel.hidden;
+  $("#settingsToggle").setAttribute("aria-expanded", String(!panel.hidden));
+};
+function updateKeyChip(){
+  const has = !!$("#apiKey").value.trim();
+  const chip = $("#keyChip");
+  chip.textContent = has ? "API-Key gesetzt" : "Kein API-Key";
+  chip.classList.toggle("on", has);
+}
+function loadKey(){
+  try{
+    const k = localStorage.getItem("cuneiform_or_api_key");
+    const m = localStorage.getItem("cuneiform_or_model");
+    if(k) $("#apiKey").value = k;
+    if(m) $("#model").value = m;
+    $("#settingsPanel").hidden = true; /* hier standardmäßig eingeklappt, da Key optional ist */
+  }catch(e){}
+  updateKeyChip();
+}
+$("#saveKey").onclick = () => {
+  try{
+    localStorage.setItem("cuneiform_or_api_key", $("#apiKey").value.trim());
+    localStorage.setItem("cuneiform_or_model", $("#model").value.trim());
+  }catch(e){}
+  updateKeyChip();
+};
+$("#clearKey").onclick = () => {
+  try{ localStorage.removeItem("cuneiform_or_api_key"); }catch(e){}
+  $("#apiKey").value = "";
+  updateKeyChip();
+};
+$("#apiKey").addEventListener("input", updateKeyChip);
+
+$("#testConn").onclick = async () => {
+  const el = $("#testResult");
+  el.className = ""; el.textContent = "prüft …";
+  try{
+    await callAiWithFallback({
+      userContent: [{type:"text", text:"Antworte nur mit: ok"}],
+      maxTokens: 8,
+      onAttempt: (model, idx, total, pass) => { el.textContent = (pass > 1 ? "2. Versuch — " : "") + "prüft „" + model + "“ …"; },
+      onRetryPass: () => { el.textContent = "Erster Durchlauf erfolglos — kurze Pause, dann zweiter Versuch …"; }
+    });
+    el.className = "ok"; el.textContent = "✓ Verbindung erfolgreich (Modell: " + getLastKnownGoodModel() + ").";
+  }catch(e){
+    el.className = "fail"; el.textContent = "✗ " + e.message;
+  }
+};
+
+/* ---------- OpenRouter model auto-discovery & fallback ----------
+   Identische Logik wie in index.html (siehe dort für ausführliche Erläuterung): eine zur
+   Laufzeit ermittelte Kandidatenliste kostenloser Modelle wird durchprobiert, bei Modell-
+   bezogenen Fehlern automatisch das nächste Modell versucht, bei komplett erfolglosem ersten
+   Durchlauf ein zweiter Durchlauf nach kurzer Pause gestartet. */
+const STATIC_FALLBACK_MODELS = [
+  "qwen/qwen2.5-vl-72b-instruct:free",
+  "qwen/qwen2.5-vl-32b-instruct:free",
+  "meta-llama/llama-3.2-11b-vision-instruct:free",
+  "meta-llama/llama-3.2-90b-vision-instruct:free",
+  "google/gemma-3-27b-it:free",
+  "google/gemma-3-12b-it:free",
+  "mistralai/mistral-small-3.2-24b-instruct:free",
+  "mistralai/mistral-small-3.1-24b-instruct:free",
+  "qwen/qwen3-vl-235b-a22b-instruct:free",
+  "z-ai/glm-4.5v:free",
+  "moonshotai/kimi-vl-a3b-thinking:free"
+];
+
+function getLastKnownGoodModel(){
+  try{ return localStorage.getItem("cuneiform_or_last_working_model") || ""; }catch(e){ return ""; }
+}
+function rememberWorkingModel(model){
+  try{ localStorage.setItem("cuneiform_or_last_working_model", model); }catch(e){}
+}
+
+let discoveredModelsCache = null;
+async function discoverFreeVisionModels(){
+  if(discoveredModelsCache) return discoveredModelsCache;
+  try{
+    const res = await fetch("https://openrouter.ai/api/v1/models");
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const list = (data.data || []).filter(m => {
+      const p = m.pricing || {};
+      const isFree = (parseFloat(p.prompt) || 0) === 0 && (parseFloat(p.completion) || 0) === 0;
+      const mods = (m.architecture && m.architecture.input_modalities) || [];
+      return isFree && mods.includes("image");
+    }).map(m => m.id).filter(Boolean);
+    discoveredModelsCache = list;
+    return list;
+  }catch(e){
+    return [];
+  }
+}
+
+async function buildCandidateModels(){
+  const manual = $("#model").value.trim();
+  const lastGood = getLastKnownGoodModel();
+  const discovered = await discoverFreeVisionModels();
+  const ordered = [];
+  if(manual) ordered.push(manual);
+  if(lastGood) ordered.push(lastGood);
+  discovered.forEach(m => ordered.push(m));
+  STATIC_FALLBACK_MODELS.forEach(m => ordered.push(m));
+  return ordered.filter((m, i) => m && ordered.indexOf(m) === i);
+}
+
+async function callClaude({system, userContent, maxTokens, modelOverride}){
+  const key = $("#apiKey").value.trim();
+  if(!key){
+    const err = new Error("Kein API-Key eingetragen. Öffne oben „⚙ API-Key“ und trage deinen kostenlosen OpenRouter-Key ein (openrouter.ai/keys).");
+    err.fatal = true;
+    throw err;
+  }
+  const model = modelOverride;
+  const messages = [];
+  if(system) messages.push({ role: "system", content: system });
+  messages.push({ role: "user", content: userContent });
+  let res;
+  try{
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "authorization": "Bearer " + key
+      },
+      body: JSON.stringify({ model, max_tokens: maxTokens || 2048, messages })
+    });
+  }catch(networkErr){
+    const err = new Error("Netzwerkfehler beim Aufruf von openrouter.ai — Internetverbindung prüfen. (" + networkErr.message + ")");
+    err.fatal = true;
+    throw err;
+  }
+  const data = await res.json().catch(()=>null);
+  if(!res.ok || !data || data.error){
+    const info = friendlyApiError(res.status, data, model);
+    const err = new Error(info.message);
+    err.fatal = info.fatal;
+    throw err;
+  }
+  const choice = data.choices && data.choices[0];
+  const content = choice && choice.message ? choice.message.content : null;
+  if(content == null){
+    const err = new Error("Die KI hat keine verwertbare Antwort geliefert (Modell „" + model + "“).");
+    err.fatal = false;
+    throw err;
+  }
+  return Array.isArray(content) ? content.map(b=>b.text||"").join("\n") : String(content);
+}
+
+function friendlyApiError(status, data, model){
+  const err = data && data.error ? data.error : null;
+  const code = err ? err.code : status;
+  const msg = err ? err.message : `HTTP ${status}`;
+  if(code === 401) return { message: "API-Key ungültig oder abgelaufen. Bitte in den Einstellungen prüfen (openrouter.ai/keys).", fatal: true };
+  if(/no endpoints|no allowed providers|not a valid model|not found/i.test(msg || "")) return { message: "Modell „" + model + "“ ist derzeit nicht verfügbar — probiere ein anderes Modell.", fatal: false };
+  if(code === 402) return { message: "Kontingent für Modell „" + model + "“ aufgebraucht.", fatal: false };
+  if(code === 429) return { message: "Rate-Limit bei OpenRouter für „" + model + "“ erreicht.", fatal: false };
+  if(code === 408) return { message: "Zeitüberschreitung bei der KI-Anfrage (Modell „" + model + "“).", fatal: false };
+  if(status === 502 || status === 503 || code === 502 || code === 503) return { message: "Modell „" + model + "“ ist gerade nicht erreichbar.", fatal: false };
+  if(code === 400 && msg && /model/i.test(msg)) return { message: "Modell „" + model + "“ wurde nicht gefunden.", fatal: false };
+  return { message: "OpenRouter API-Fehler bei „" + model + "“: " + msg, fatal: false };
+}
+
+async function attemptCandidates(candidates, {system, userContent, maxTokens, onAttempt, parseAndValidate}, passNumber){
+  let lastErr = null;
+  for(let i = 0; i < candidates.length; i++){
+    const model = candidates[i];
+    if(onAttempt) onAttempt(model, i, candidates.length, passNumber);
+    let text;
+    try{
+      text = await callClaude({system, userContent, maxTokens, modelOverride: model});
+    }catch(e){
+      lastErr = e;
+      if(e.fatal) throw e;
+      continue;
+    }
+    if(!parseAndValidate){
+      rememberWorkingModel(model);
+      return { ok: true, value: text };
+    }
+    try{
+      const parsed = parseAndValidate(text);
+      rememberWorkingModel(model);
+      return { ok: true, value: parsed };
+    }catch(parseErr){
+      lastErr = new Error("Modell „" + model + "“ hat geantwortet, aber keine auswertbare Antwort geliefert (" + parseErr.message + ").");
+      lastErr.fatal = false;
+    }
+  }
+  return { ok: false, err: lastErr };
+}
+
+async function callAiWithFallback({system, userContent, maxTokens, onAttempt, onRetryPass, parseAndValidate}){
+  const key = $("#apiKey").value.trim();
+  if(!key) throw new Error("Kein API-Key eingetragen. Öffne oben „⚙ API-Key“ und trage deinen kostenlosen OpenRouter-Key ein (openrouter.ai/keys).");
+  const candidates = await buildCandidateModels();
+  if(!candidates.length) throw new Error("Kein passendes kostenloses Modell gefunden. Bitte später erneut versuchen oder oben manuell ein Modell eintragen.");
+
+  const opts = { system, userContent, maxTokens, onAttempt, parseAndValidate };
+  let result = await attemptCandidates(candidates, opts, 1);
+  if(result.ok) return result.value;
+
+  if(onRetryPass) onRetryPass();
+  await new Promise(r => setTimeout(r, 2500));
+  result = await attemptCandidates(candidates, opts, 2);
+  if(result.ok) return result.value;
+
+  const base = result.err ? result.err.message : "Alle verfügbaren kostenlosen Modelle sind derzeit nicht erreichbar.";
+  throw new Error(base + " Versuchte Modelle (2 Durchläufe): " + candidates.join(", ") +
+    ". Auf openrouter.ai/models (Filter: kostenlos) nachsehen und ggf. ein aktuelles Modell " +
+    "oben manuell eintragen, oder es in ein paar Minuten erneut versuchen.");
+}
+
+function extractBalancedJsonObject(raw){
+  const start = raw.indexOf("{");
+  if(start === -1) return null;
+  let depth = 0, inStr = false, esc = false;
+  for(let i = start; i < raw.length; i++){
+    const c = raw[i];
+    if(inStr){
+      if(esc) esc = false;
+      else if(c === "\\") esc = true;
+      else if(c === '"') inStr = false;
+    } else {
+      if(c === '"') inStr = true;
+      else if(c === "{") depth++;
+      else if(c === "}"){ depth--; if(depth === 0) return raw.slice(start, i + 1); }
+    }
+  }
+  return null;
+}
+function sanitizeJsonText(objText){
+  let out = "", inStr = false, esc = false;
+  for(let i = 0; i < objText.length; i++){
+    const c = objText[i];
+    if(inStr){
+      if(esc){ out += c; esc = false; continue; }
+      if(c === "\\"){ out += c; esc = true; continue; }
+      if(c === '"'){ inStr = false; out += c; continue; }
+      if(c === "\n"){ out += "\\n"; continue; }
+      if(c === "\r"){ continue; }
+      if(c === "\t"){ out += "\\t"; continue; }
+      out += c;
+    } else {
+      if(c === '"'){ inStr = true; }
+      out += c;
+    }
+  }
+  return out.replace(/,(\s*[}\]])/g, "$1");
+}
+function extractJson(text){
+  const candidates = [];
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if(fence) candidates.push(fence[1]);
+  candidates.push(text);
+  for(const raw of candidates){
+    const objText = extractBalancedJsonObject(raw);
+    if(!objText) continue;
+    try{ return JSON.parse(objText); }catch(e){}
+    try{ return JSON.parse(sanitizeJsonText(objText)); }catch(e){}
+  }
+  throw new Error("kein gültiges JSON in der Antwort gefunden");
+}
+
+/* ---------- Daten laden ---------- */
+async function loadOsl(){
+  try{
+    const data = await (await fetch("data/signs.osl.json")).json();
+    osl = data.records.filter(x => x.record_type === "sign" && !x.deprecated);
+  }catch(e){
+    try{ osl = await (await fetch("data/signs.seed.json")).json(); }catch(e2){ osl = []; }
+  }
+  osl.forEach(r => {
+    const key = normalizeName(r.name);
+    if(key && !oslByName.has(key)) oslByName.set(key, r);
+    (r.aka||[]).forEach(a => { const k=normalizeName(a); if(k && !oslByName.has(k)) oslByName.set(k, r); });
+    (r.provisional_names||[]).forEach(a => { const k=normalizeName(a); if(k && !oslByName.has(k)) oslByName.set(k, r); });
+  });
+}
+function normalizeName(s){ return String(s||"").toUpperCase().replace(/[|]/g,"").trim(); }
+function findOslByName(name){ return oslByName.get(normalizeName(name)) || null; }
+
+async function loadJson(path){
+  const r = await fetch(path);
+  if(!r.ok) throw new Error(path + " nicht gefunden");
+  return r.json();
+}
+async function loadGlossaryAndLanguages(){
+  try{ glossary = await loadJson("data/logogram_glossary.json"); }catch(e){ glossary = []; }
+  try{
+    languages = (await loadJson("data/languages.json")).languages;
+    /* Für die KI-Anfrage: allgemeine Sumerisch/Akkadisch-Einträge plus jede "weitere"
+       Keilschriftsprache einzeln (nicht die periodenspezifischen Sumerisch-/Akkadisch-
+       Untervarianten, um die Anfrage kompakt zu halten). */
+    aiLanguageTargets = languages
+      .filter(l => l.id === "sumerian" || l.id === "akkadian" || l.group === "Weitere Keilschrift-Sprachen")
+      .map(l => ({ id: l.id, label: l.name_de }));
+  }catch(e){ languages = []; aiLanguageTargets = []; }
+}
+
+/* ---------- Kurzglossar-Suche ---------- */
+function searchGlossary(term){
+  const q = term.toLowerCase().trim();
+  if(!q) return [];
+  return glossary.filter(g => {
+    const hay = [g.meaning_de, g.name, g.reading_su, g.akkadian_su, g.category, g.note||""].join(" ").toLowerCase();
+    return hay.includes(q);
+  }).slice(0, 24);
+}
+
+function dictCardHtml(g, idx){
+  const rec = findOslByName(g.name);
+  return `<button class="dictcard reveal" style="animation-delay:${Math.min(idx*0.04,0.6)}s" data-name="${escapeHtml(g.name)}">
+    <div class="g ${rec?'':'nomatch'}">${rec ? escapeHtml(rec.glyph||"?") : "𒀸"}</div>
+    <h3>${escapeHtml(g.name)}</h3>
+    <div class="rd">${escapeHtml(g.reading_su||"")}</div>
+    <div class="meaning">${escapeHtml(g.meaning_de)}</div>
+    <span class="cat">${escapeHtml(g.category||"")}</span>
+  </button>`;
+}
+
+function openCuratedDetail(g){
+  const rec = findOslByName(g.name);
+  const panel = $("#panel");
+  panel.innerHTML = `
+    <button class="close">✕</button>
+    <div class="pg">${rec ? escapeHtml(rec.glyph||"?") : "𒀸"}</div>
+    <h3>${escapeHtml(g.name)}</h3>
+    <div class="pid">${rec ? escapeHtml(rec.id) + " · Oracc Sign List" : "kein Treffer in lokaler OSL-Datenbank"}</div>
+    <div class="plist">
+      <div><b>Lesung (Sumerisch):</b> ${escapeHtml(g.reading_su||"–")}</div>
+      ${g.akkadian_su ? `<div style="margin-top:8px"><b>Als Sumerogramm im Akkadischen gelesen:</b> ${escapeHtml(g.akkadian_su)}</div>` : ""}
+      <div style="margin-top:8px"><b>Bedeutung:</b> ${escapeHtml(g.meaning_de)}</div>
+      <div style="margin-top:8px"><b>Kategorie:</b> ${escapeHtml(g.category||"–")}</div>
+      ${g.note ? `<div style="margin-top:8px"><b>Anmerkung:</b> ${escapeHtml(g.note)}</div>` : ""}
+      <div style="margin-top:12px;font-size:.8rem;font-style:italic">Aus dem kuratierten Kurzglossar — mehr Details im <a href="archiv.html">Zeichen-Archiv</a>.</div>
+    </div>`;
+  panel.querySelector(".close").onclick = () => $("#overlay").classList.remove("open");
+  $("#overlay").classList.add("open");
+}
+
+function renderCurated(matches){
+  const section = $("#curatedSection");
+  section.style.display = "block";
+  if(!matches.length){
+    $("#curatedGrid").innerHTML = "";
+    $("#curatedEmpty").style.display = "block";
+    return;
+  }
+  $("#curatedEmpty").style.display = "none";
+  $("#curatedGrid").innerHTML = matches.map((g,i) => dictCardHtml(g,i)).join("");
+  $("#curatedGrid").querySelectorAll(".dictcard").forEach(card => {
+    card.addEventListener("click", () => {
+      const g = matches.find(m => m.name === card.dataset.name);
+      if(g) openCuratedDetail(g);
+    });
+  });
+  matches.forEach(g => CuneiformProgress.markSignSeen(g.name));
+}
+
+/* ---------- KI-Vorschlag für weitere Sprachen ---------- */
+let currentTerm = "";
+$("#aiRequestBtn").onclick = requestAiSuggestion;
+
+async function requestAiSuggestion(){
+  if(!currentTerm){ showError("Bitte zuerst oben einen Begriff suchen."); return; }
+  showError("");
+  const btn = $("#aiRequestBtn");
+  btn.disabled = true;
+  $("#aiLoadingNote").style.display = "block";
+  $("#aiLoadingNote").textContent = "🔮 KI wird befragt …";
+  $("#aiResultsBox").style.display = "none";
+  try{
+    const langList = aiLanguageTargets.length ? aiLanguageTargets
+      : [{id:"sumerian",label:"Sumerisch"},{id:"akkadian",label:"Akkadisch"}];
+    const langListText = langList.map(l => `${l.id} (${l.label})`).join(", ");
+    const parsed = await callAiWithFallback({
+      system: "Du bist eine vorsichtige, wissenschaftlich arbeitende Assistenz für Keilschrift-Sprachen. Du " +
+        "bekommst einen deutschen Begriff und sollst für JEDE der folgenden Keilschrift-Sprachen (language_id in " +
+        "Klammern) eine mögliche Übersetzung/Entsprechung angeben, sofern bekannt: " + langListText + ". " +
+        "Gib pro Sprache das Wort in wissenschaftlicher Transkription an sowie — sofern zutreffend — die " +
+        "zugehörigen Keilschriftzeichen als Standard-Zeichennamen in GROSSBUCHSTABEN (wie in der Oracc Sign List " +
+        "üblich, z. B. \"LUGAL\", \"AN\", \"DINGIR\"), damit sie mit einer lokalen Zeichendatenbank abgeglichen " +
+        "werden können. Wenn für eine Sprache kein bekanntes/plausibles Äquivalent existiert oder du sehr unsicher " +
+        "bist, setze \"available\" auf false und erkläre kurz warum (z. B. kulturell nicht übertragbar, keine " +
+        "Belege bekannt, Begriff zu modern). Sei ehrlich mit Unsicherheit — rate nicht ins Blaue, sondern " +
+        "kennzeichne sie über \"confidence\" (0-100) und im \"notes\"-Feld. Antworte NUR mit JSON in genau diesem " +
+        'Format, mit GENAU einem Eintrag pro angegebener Sprache: {"term_de":"König","entries":[' +
+        '{"language_id":"sumerian","language_label":"Sumerisch","available":true,"word":"lugal","signs":["LUGAL"],"confidence":85,"notes":""},' +
+        '{"language_id":"hittite","language_label":"Hethitisch","available":false,"word":"","signs":[],"confidence":0,"notes":"kein direktes Äquivalent bekannt"}' +
+        "]}",
+      userContent: [{type:"text", text: "Deutscher Begriff: " + currentTerm}],
+      maxTokens: 1400,
+      onAttempt: (model, idx, total, pass) => {
+        const passPrefix = pass > 1 ? "🔁 2. Durchlauf — " : "🔮 ";
+        $("#aiLoadingNote").textContent = total > 1
+          ? passPrefix + "KI wird befragt (Modell " + (idx+1) + "/" + total + ": " + model + ") …"
+          : passPrefix + "KI wird befragt (Modell: " + model + ") …";
+      },
+      onRetryPass: () => {
+        $("#aiLoadingNote").textContent = "⏳ Beim ersten Durchlauf war kein Modell erreichbar — kurze Pause, dann automatisch ein zweiter Versuch …";
+      },
+      parseAndValidate: (text) => {
+        const obj = extractJson(text);
+        if(!obj || typeof obj !== "object" || !Array.isArray(obj.entries)){
+          throw new Error("Antwort ist kein gültiges Sprachen-JSON");
+        }
+        return obj;
+      }
+    });
+    renderAiResults(parsed);
+    CuneiformProgress.addXp(2);
+  }catch(e){
+    showError(e.message);
+  }
+  btn.disabled = false;
+  $("#aiLoadingNote").style.display = "none";
+}
+
+function renderAiResults(parsed){
+  const entries = parsed.entries || [];
+  $("#aiResults").innerHTML = entries.map(e => {
+    const signsHtml = (e.signs||[]).map(name => {
+      const rec = findOslByName(name);
+      return `<span class="minichip" data-sign="${escapeHtml(name)}"><span class="g">${rec?escapeHtml(rec.glyph||"?"):"𒀸"}</span>${escapeHtml(name)}</span>`;
+    }).join("");
+    return `<div class="langresult">
+      <div class="lhead">
+        <span class="lname">${escapeHtml(e.language_label||e.language_id||"?")}</span>
+        <span class="availbadge ${e.available?'yes':'no'}">${e.available ? "Vorschlag vorhanden" : "kein Äquivalent"}</span>
+      </div>
+      ${e.available && e.word ? `<div class="word">${escapeHtml(e.word)}</div>` : ""}
+      ${signsHtml ? `<div class="signrow">${signsHtml}</div>` : ""}
+      ${e.confidence != null ? `<div class="conf">Confidence: ${e.confidence}%</div>` : ""}
+      ${e.notes ? `<div class="notes">${escapeHtml(e.notes)}</div>` : ""}
+    </div>`;
+  }).join("") || `<span class="emptynote">Keine Sprach-Einträge zurückgegeben.</span>`;
+  $("#aiResultsBox").style.display = "block";
+  $("#aiResultsBox").querySelectorAll(".minichip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const rec = findOslByName(chip.dataset.sign);
+      const panel = $("#panel");
+      panel.innerHTML = `
+        <button class="close">✕</button>
+        <div class="pg">${rec ? escapeHtml(rec.glyph||"?") : "𒀸"}</div>
+        <h3>${escapeHtml(chip.dataset.sign)}</h3>
+        <div class="pid">${rec ? escapeHtml(rec.id) + " · Oracc Sign List" : "kein Treffer in lokaler OSL-Datenbank"}</div>
+        <div class="plist"><div style="font-style:italic">🔮 Von der KI als Vorschlag genannt — unverifiziert, siehe Hinweis oberhalb der Ergebnisliste.</div></div>`;
+      panel.querySelector(".close").onclick = () => $("#overlay").classList.remove("open");
+      $("#overlay").classList.add("open");
+    });
+  });
+}
+
+/* ---------- Suche ausführen ---------- */
+$("#searchBtn").onclick = runSearch;
+$("#termInput").addEventListener("keydown", e => { if(e.key === "Enter") runSearch(); });
+
+function runSearch(){
+  const term = $("#termInput").value.trim();
+  showError("");
+  $("#aiResultsBox").style.display = "none";
+  if(!term){
+    $("#curatedSection").style.display = "none";
+    $("#aiSection").style.display = "none";
+    return;
+  }
+  currentTerm = term;
+  const matches = searchGlossary(term);
+  renderCurated(matches);
+  $("#aiSection").style.display = "block";
+  CuneiformProgress.incStat("dictLookups");
+  CuneiformProgress.addXp(3);
+}
+
+$("#overlay").addEventListener("click", e => { if(e.target.id==="overlay") $("#overlay").classList.remove("open"); });
+document.addEventListener("keydown", e => { if(e.key==="Escape") $("#overlay").classList.remove("open"); });
+
+/* ---------- Init ---------- */
+(async () => {
+  loadKey();
+  CuneiformProgress.renderProgressChip();
+  await Promise.all([loadOsl(), loadGlossaryAndLanguages()]);
+})();
+</script>
+</body>
+</html>

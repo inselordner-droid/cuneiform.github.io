@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ORACC-OSL",
+    "name": "Oracc Sign List (OSL)",
+    "organization": "Oracc",
+    "url": "https://github.com/oracc/osl",
+    "machine_readable": "https://raw.githubusercontent.com/oracc/osl/master/00lib/osl.asl",
+    "license": "CC0 / Public Domain",
+    "role": "Sign identities, OID, Unicode, values, sign-list references, forms and links"
+  },
+  {
+    "id": "UNICODE-TR56",
+    "name": "Unicode Technical Report #56 — Cuneiform Sign Lists",
+    "organization": "Unicode Consortium",
+    "url": "https://www.unicode.org/reports/tr56/",
+    "role": "Technical documentation for OSL and Unicode cuneiform encoding"
+  },
+  {
+    "id": "DCCLT",
+    "name": "Digital Corpus of Cuneiform Lexical Texts",
+    "organization": "Oracc / DCCLT",
+    "url": "https://oracc.museum.upenn.edu/dcclt/",
+    "role": "Historical sign lists and lexical data"
+  },
+  {
+    "id": "ePSD2",
+    "name": "electronic Pennsylvania Sumerian Dictionary 2",
+    "organization": "Oracc / ePSD2",
+    "url": "https://oracc.museum.upenn.edu/epsd2/",
+    "role": "Sumerian lexical data"
+  }
+]
